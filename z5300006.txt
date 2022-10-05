@@ -2,3 +2,5 @@ Week1
 Discuss the topic selection of the project with the group members, conduct project background investigation, understand the work that needs to be done and roughly divide the labor.
 Week2
 Detailed division of labor, complete the general design of the front-end web page and the text part of the proposal on technology selection and tool selection.
+Week3
+Complete the framework design of all front-end websites, organize the interface with the back-end, organize the proposal text, and start to write the code part.
