@@ -27,7 +27,7 @@ class Charity(models.Model):
 
 
 class Sponsor(models.Model):
-    sponsor_name = models.CharField(max_length=255, unique=False, blank=False)
+    sponsor_name = models.CharField(max_length=255, unique=True, blank=False)
     email = models.CharField(unique=True, blank=False, max_length=255)
     description = models.TextField(blank=False)
     needs = models.ManyToManyField(Needs, blank=True)
@@ -52,6 +52,3 @@ class Event(models.Model):
         verbose_name = "event"
 
 
-@admin.register(Charity)
-class CharityAdmin(admin.ModelAdmin):
-    list_display = ("id", "charity_name", "email", "description", "password")
