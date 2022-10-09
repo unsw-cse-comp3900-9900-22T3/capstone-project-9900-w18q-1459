@@ -124,3 +124,5 @@ REST_FRAMEWORK = {
     # 权限
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
 }
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

@@ -6,6 +6,7 @@ class Needs(models.Model):
     needs_name = models.CharField(max_length=255, unique=True, primary_key=True)
 
     class Meta:
+        managed = True
         verbose_name = "needs"
 
     def __str__(self):
@@ -20,6 +21,7 @@ class Charity(models.Model):
     password = models.CharField(max_length=255, blank=True)
 
     class Meta:
+        managed = True
         verbose_name = "charity"
 
     def __str__(self):
@@ -36,6 +38,7 @@ class Sponsor(models.Model):
     password = models.CharField(max_length=255, blank=True)
 
     class Meta:
+        managed = True
         verbose_name = "sponsor"
 
     def __str__(self):
@@ -49,6 +52,7 @@ class Event(models.Model):
     Charity = models.ForeignKey(Charity, blank=False, on_delete=models.CASCADE)
 
     class Meta:
+        managed = True
         verbose_name = "event"
 
 

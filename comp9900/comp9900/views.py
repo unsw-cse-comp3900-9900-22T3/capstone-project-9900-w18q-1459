@@ -40,19 +40,19 @@ class LoginView(generics.GenericAPIView):
         if not serializer.is_valid():
             return Response({"message": str(serializer.errors), "data": {}})
         login_data = serializer.data
-        if login_data.charity and not login_data.sponsor:
-            charity = Charity.objects.filter(email=login_data.email)
+        if login_data['charity'] and not login_data['sponsor']:
+            charity = Charity.objects.filter(email=login_data['email'])
             if not charity:
                 return Response(data={'message': 'The email does not exists'})
-            elif charity.password == login_data.password:
+            elif charity[0].password == login_data['password']:
                 return Response(data={'message': 'success'})
             else:
                 return Response(data={'message': 'Wrong password or email'})
-        elif login_data.sponsor and not login_data.charity:
-            sponsor = Sponsor.objects.filter(email=login_data.email)
+        elif login_data['sponsor'] and not login_data['charity']:
+            sponsor = Sponsor.objects.filter(email=login_data['email'])
             if not sponsor:
                 return Response(data={'message': 'The email does not exists'})
-            elif sponsor.password == login_data.password:
+            elif sponsor[0].password == login_data['password']:
                 return Response(data={'message': 'success'})
             else:
                 return Response(data={'message': 'Wrong password or email'})
@@ -77,8 +77,8 @@ class RegisterView(generics.GenericAPIView):
             charity = Charity.objects.filter(Q(email=register_data['email']) | Q(charity_name=register_data['name']))
             if charity:
                 return Response(data={'message': 'The email or name has exists'})
-            elif register_data['password'] != register_data['confirmed_password']:
-                return Response(data={'message': 'The password is different from your confirmed_password'})
+            elif register_data['password'] != register_data['confirm_password']:
+                return Response(data={'message': 'The password is different from your confirm password'})
             else:
                 Charity.objects.create(
                     charity_name=register_data['name'],
@@ -91,8 +91,8 @@ class RegisterView(generics.GenericAPIView):
             sponsor = Sponsor.objects.filter(Q(email=register_data['email']) | Q(sponsor_name=register_data['name']))
             if not sponsor:
                 return Response(data={'message': 'The email or name has exists'})
-            elif register_data['password'] != register_data['confirmed_password']:
-                return Response(data={'message': 'The password is different from your confirmed_password'})
+            elif register_data['password'] != register_data['confirm_password']:
+                return Response(data={'message': 'The password is different from your confirm password'})
             else:
                 Sponsor.objects.create(
                     sponsor_name=register_data['name'],
