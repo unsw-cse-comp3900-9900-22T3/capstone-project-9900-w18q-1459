@@ -2,7 +2,7 @@
 
 ## Step 1: Environment Settings
 ```commandline
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 ## Step 2: SQL Migrate
 ### Edit settings.py
