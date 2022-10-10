@@ -5,6 +5,19 @@
 pip install requirements.txt
 ```
 ## Step 2: SQL Migrate
+### Edit settings.py
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',  
+        'NAME': 'comp9900',  # your database name
+        'USER': 'root',  # your mysql user name
+        'PASSWORD': 'root1234',  # your mysql password
+        'HOST': '',  # 
+        'PORT': '3306',  # 
+    }
+}
+```
 ```commandline
 python3 manage.py migrate
 ```
