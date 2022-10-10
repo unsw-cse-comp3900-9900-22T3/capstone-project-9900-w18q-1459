@@ -45,7 +45,13 @@ class LoginView(generics.GenericAPIView):
             if not charity:
                 return Response(data={'message': 'The email does not exists'})
             elif charity[0].password == login_data['password']:
-                return Response(data={'message': 'success'})
+                detail = {
+                    'name': charity[0].charity_name,
+                    'needs': charity[0].needs,
+                    'description': charity[0].description,
+                    'email': charity[0].email
+                }
+                return Response(data={'message': 'success', 'detail': detail})
             else:
                 return Response(data={'message': 'Wrong password or email'})
         elif login_data['sponsor'] and not login_data['charity']:
@@ -53,7 +59,13 @@ class LoginView(generics.GenericAPIView):
             if not sponsor:
                 return Response(data={'message': 'The email does not exists'})
             elif sponsor[0].password == login_data['password']:
-                return Response(data={'message': 'success'})
+                detail = {
+                    'name': sponsor[0].sponsor_name,
+                    'description': sponsor[0].description,
+                    'email': sponsor[0].email,
+                    'follow': sponsor[0].follows,
+                }
+                return Response(data={'message': 'success', 'detail': detail})
             else:
                 return Response(data={'message': 'Wrong password or email'})
         else:
