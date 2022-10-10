@@ -18,6 +18,7 @@ DATABASES = {
     }
 }
 ```
+### Model Migrate
 ```commandline
 python3 manage.py migrate
 ```

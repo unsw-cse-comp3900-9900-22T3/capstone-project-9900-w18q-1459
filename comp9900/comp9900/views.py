@@ -47,10 +47,10 @@ class LoginView(generics.GenericAPIView):
             elif charity[0].password == login_data['password']:
                 detail = {
                     'name': charity[0].charity_name,
-                    'needs': charity[0].needs,
                     'description': charity[0].description,
                     'email': charity[0].email
                 }
+                print(detail, type(detail))
                 return Response(data={'message': 'success', 'detail': detail})
             else:
                 return Response(data={'message': 'Wrong password or email'})
@@ -63,8 +63,9 @@ class LoginView(generics.GenericAPIView):
                     'name': sponsor[0].sponsor_name,
                     'description': sponsor[0].description,
                     'email': sponsor[0].email,
-                    'follow': sponsor[0].follows,
+                    'website_link': sponsor[0].website_link
                 }
+                print(detail, type(detail))
                 return Response(data={'message': 'success', 'detail': detail})
             else:
                 return Response(data={'message': 'Wrong password or email'})
@@ -101,7 +102,7 @@ class RegisterView(generics.GenericAPIView):
                 return Response(data={'message': 'Successful register'})
         elif register_data['sponsor'] and not register_data['charity']:
             sponsor = Sponsor.objects.filter(Q(email=register_data['email']) | Q(sponsor_name=register_data['name']))
-            if not sponsor:
+            if sponsor:
                 return Response(data={'message': 'The email or name has exists'})
             elif register_data['password'] != register_data['confirm_password']:
                 return Response(data={'message': 'The password is different from your confirm password'})
