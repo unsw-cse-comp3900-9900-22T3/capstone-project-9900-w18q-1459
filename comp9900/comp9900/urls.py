@@ -25,4 +25,8 @@ urlpatterns = [
                                        permission_classes=[])),
     re_path(r'^login/', views.LoginView.as_view(), name='login'),
     re_path(r'^register/', views.RegisterView.as_view(), name='register'),
+    re_path(r'^create_needs/', views.CreateneedsView.as_view(), name='create needs'),
+    re_path(r'^add_needs_to_c/', views.AddneedsView.as_view(), name='add needs to a charity'),
+    re_path(r'^show_20_needs/', views.ShowneedsView.as_view(), name='show top20 needs'),
+    re_path(r'^show_charity_needs/', views.ShowCharityNeedsView.as_view(), name='show charity needs'),
 ]
