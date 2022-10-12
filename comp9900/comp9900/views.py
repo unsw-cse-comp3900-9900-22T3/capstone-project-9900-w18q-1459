@@ -47,7 +47,7 @@ class LoginView(generics.GenericAPIView):
 
     def post(self, request):
         """
-        登录接口
+        Login interface
         """
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
@@ -93,7 +93,7 @@ class RegisterView(generics.GenericAPIView):
 
     def post(self, request):
         """
-        注册接口
+        Register interface
         """
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():

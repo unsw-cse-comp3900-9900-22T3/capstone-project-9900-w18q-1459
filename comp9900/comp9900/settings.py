@@ -74,12 +74,12 @@ WSGI_APPLICATION = 'comp9900.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # 表示使用的是mysql数据库的引擎
-        'NAME': 'comp9900',  # 数据库的名字，可以在mysql的提示符下先创建好
-        'USER': 'root',  # 数据库用户名
-        'PASSWORD': 'root1234',  # 数据库密码
-        'HOST': '',  # 数据库主机，留空默认为"localhost"
-        'PORT': '3306',  # 数据库使用的端口
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'comp9900',
+        'USER': 'root',
+        'PASSWORD': 'root1234',
+        'HOST': '',
+        'PORT': '3306',
     }
 }
 
@@ -119,9 +119,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 REST_FRAMEWORK = {
-    # 指定用于支持coreapi的Schema
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
-    # 权限
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
 }
 
