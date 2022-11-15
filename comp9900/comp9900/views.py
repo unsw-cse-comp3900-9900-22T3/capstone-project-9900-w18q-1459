@@ -10,6 +10,7 @@ from rest_framework import serializers
 from .models import Charity, Sponsor, Event, Needs, SponsorScore, CharityScore
 from django.db.models import Q
 from django.forms.models import model_to_dict
+from tools import *
 
 
 class CharitySerializer(serializers.ModelSerializer):
@@ -40,6 +41,10 @@ class RatingSerializer(serializers.Serializer):
     type = serializers.CharField(required=True)
 
 
+class SearchEventSerializer(serializers.Serializer):
+    keyword = serializers.CharField(required=True)
+
+
 class SponsorEventSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
     title = serializers.CharField(required=True, max_length=65535)
@@ -67,9 +72,11 @@ class ChooseNeedsSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
     needs = serializers.CharField(required=True, max_length=255)
 
+
 class ChooseTagSerializer(serializers.Serializer):
     title = serializers.CharField(required=True)
     needs = serializers.CharField(required=True, max_length=255)
+
 
 class ChooseHelpSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
@@ -92,6 +99,15 @@ class ShowCharityNeedsSerializer(serializers.Serializer):
 class SearcheventSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
     title = serializers.CharField(required=True, max_length=65535)
+
+
+class RecommandSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    type = serializers.IntegerField(required=True)
+
+
+class ShowEventSerializer(serializers.Serializer):
+    title = serializers.CharField(required=True)
 
 
 class LoginView(generics.GenericAPIView):
@@ -270,6 +286,31 @@ class AddneedsView(generics.GenericAPIView):
         return Response({"message": 'has added'})
 
 
+class Deleteneeds_cView(generics.GenericAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = ChooseNeedsSerializer
+
+    def post(self, request):
+        """
+        Delete needs of a charity
+        :param request: needs name
+        :return: if succeed
+        """
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"message": str(serializer.errors), "data": {}})
+        charity_needs = (serializer.data)
+        charity = Charity.objects.filter(email=charity_needs['email'])
+        if not charity:
+            return Response({"message": 'charity does not exist'})
+        n_charity = charity[0].needs.filter(needs_name=charity_needs['needs'])
+        n_charity = Needs.objects.filter(needs_name=charity_needs['needs'])
+        if n_charity:
+            charity[0].needs.remove(n_charity[0])
+        return Response({"message": 'has deleted'})
+
+
 class AddtagsView(generics.GenericAPIView):
     authentication_classes = []
     permission_classes = []
@@ -296,6 +337,30 @@ class AddtagsView(generics.GenericAPIView):
             return Response({"message": 'please create tag firstly'})
         event[0].Tags.add(tag[0])
         return Response({"message": 'has added'})
+
+
+class DeletetagsView(generics.GenericAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = ChooseTagSerializer
+
+    def post(self, request):
+        """
+        Delete tags of a event
+        :param request: needs name
+        :return: if succeed
+        """
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"message": str(serializer.errors), "data": {}})
+        event_tag = (serializer.data)
+        event = Event.objects.filter(title=event_tag['title'])
+        if not event:
+            return Response({"message": 'event does not exist'})
+        tags = event[0].Tags.filter(needs_name=event_tag['needs'])
+        if tags:
+            event[0].Tags.remove(tags[0])
+        return Response({"message": 'has deleted'})
 
 
 class ShowCharityNeedsView(generics.GenericAPIView):
@@ -350,6 +415,30 @@ class AddhelpView(generics.GenericAPIView):
             return Response({"message": 'There is no such needs to help'})
         sponsor[0].help.add(n_sponsor[0])
         return Response({"message": 'has added'})
+
+
+class DeletehelpView(generics.GenericAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = ChooseHelpSerializer
+
+    def post(self, request):
+        """
+        Delete help of a sponsor
+        :param request: needs name
+        :return: if succeed
+        """
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"message": str(serializer.errors), "data": {}})
+        sponsor_needs = (serializer.data)
+        sponsor = Sponsor.objects.filter(email=sponsor_needs['email'])
+        if not sponsor:
+            return Response({"message": 'sponsor does not exist'})
+        n_sponsor = sponsor[0].help.filter(needs_name=sponsor_needs['help'])
+        if n_sponsor:
+            sponsor[0].help.remove(n_sponsor[0])
+        return Response({"message": 'has deleted'})
 
 
 class ShowsponsorhelpView(generics.GenericAPIView):
@@ -587,6 +676,60 @@ class ShowEventbyC(generics.GenericAPIView):
         return Response({"events_list": data})
 
 
+class ShowEventbyS(generics.GenericAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = ShowCharityNeedsSerializer
+
+    def post(self, request):
+        """
+        :param request: show the events of a charity
+        :return: a list of events
+        """
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"message": str(serializer.errors), "data": {}})
+        sponsor = (serializer.data)
+        sponsor = Sponsor.objects.filter(email=sponsor['email'])
+        if not sponsor:
+            return Response({"message": 'charity does not exist'})
+        sponsor = sponsor[0]
+        events = Event.objects.filter(Sponsor__incontains=sponsor)
+        data = []
+        if events:
+            for n in events:
+                n = model_to_dict(n)
+                for i in range(len(n['Tags'])):
+                    n['Tags'][i] = model_to_dict(n['Tags'][i])
+                n.pop('Charity')
+                print(n)
+                data.append(n)
+        return Response({"events_list": data})
+
+
+class ShowEvent(generics.GenericAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = ShowEventSerializer
+
+    def post(self, request):
+        """
+        :param request: show the events of a charity
+        :return: a list of events
+        """
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"message": str(serializer.errors), "data": {}})
+        title = (serializer.data)['title']
+        event = Event.objects.filter(title=title)
+        if event:
+            event = model_to_dict(event)
+            for i in range(len(event['Tags'])):
+                event['Tags'][i] = model_to_dict(event['Tags'][i])
+            print(event)
+        return Response({"events_list": event})
+
+
 class UpdateEvent(generics.GenericAPIView):
     authentication_classes = []
     permission_classes = []
@@ -669,3 +812,69 @@ class RatingEvent(generics.GenericAPIView):
             else:
                 models.CharityScore.objects.create(charity=obj[0], score=score, times=1)
             return Response({"message": 'has rated'})
+
+
+class SearchEvent(generics.GenericAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = SearchEventSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"message": str(serializer.errors), "data": {}})
+        data = (serializer.data)
+        keyword = data['keyword']
+        if not keyword:
+            return Response({"message": "No keyword"})
+        events = Event.objects.filter(
+            Q(title__icontains=keyword) | Q(description__icontains=keyword) | Q(Charity__icontains=keyword)
+        )
+        data = []
+        if events:
+            for n in events:
+                n = model_to_dict(n)
+                for i in range(len(n['Tags'])):
+                    n['Tags'][i] = model_to_dict(n['Tags'][i])
+                n.pop('Charity')
+                print(n)
+                data.append(n)
+        return Response({"events_list": data})
+
+
+class Recommandations(generics.GenericAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = RecommandSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"message": str(serializer.errors), "data": {}})
+        data = (serializer.data)
+        email = data['email']
+        type = data['type']
+        if type == 0:
+            data = get_recommand_sponsor(email)
+        elif type == 1:
+            data = get_recommand_sponsor_withconnections(email)
+        elif type == 2:
+            data = get_recommand_sponsor_withoutconnections(email)
+        return Response({"data": data})
+
+
+class Topsponsors(generics.GenericAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = RecommandSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"message": str(serializer.errors), "data": {}})
+        data = (serializer.data)
+        sponsors = get_charity_sponsor(data['email'])
+        sorted_sponsors = sorted(sponsors.items(), key=lambda kv: (kv[1], kv[0]))
+        print(sorted_sponsors)
+        return Response({"data": sorted_sponsors[:10]})
+

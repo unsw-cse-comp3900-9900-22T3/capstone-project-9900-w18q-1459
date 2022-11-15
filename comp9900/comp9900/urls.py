@@ -45,4 +45,11 @@ urlpatterns = [
     re_path(r'^update_event/', views.UpdateEvent.as_view(), name='update event'),
     re_path(r'^rate_event/', views.RatingEvent.as_view(), name='rate c by s or rate s by c'),
     re_path(r'^add_tag_event/', views.AddtagsView.as_view(), name='add tag to a event'),
+    re_path(r'^show_event/', views.ShowEvent.as_view(), name='show a event'),
+    re_path(r'^show_event_s/', views.ShowEventbyS.as_view(), name='show sponsors events'),
+    re_path(r'^del_needs/', views.Deleteneeds_cView.as_view(), name='delete needs of a c'),
+    re_path(r'^del_help/', views.DeletehelpView.as_view(), name='del help of a sponsor'),
+    re_path(r'^recommandations/', views.Recommandations.as_view(), name='recommand to a charity'),
+    re_path(r'^search_event/', views.SearchEvent.as_view(), name='search event'),
+    re_path(r'^Top_sponsor/', views.Topsponsors.as_view(), name='get top sponsor of a charity'),
 ]

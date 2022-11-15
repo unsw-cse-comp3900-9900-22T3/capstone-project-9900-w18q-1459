@@ -5,7 +5,7 @@ from asgiref.sync import async_to_sync
 import redis
 
 pool = redis.ConnectionPool(
-  host="10.0.6.29",
+  host="127.0.0.1",
   port=6379,
   max_connections=10,
   decode_response=True,
