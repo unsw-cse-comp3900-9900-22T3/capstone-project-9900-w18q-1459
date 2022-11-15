@@ -10,7 +10,7 @@ from rest_framework import serializers
 from .models import Charity, Sponsor, Event, Needs, SponsorScore, CharityScore
 from django.db.models import Q
 from django.forms.models import model_to_dict
-from tools import *
+from .tools import *
 
 
 class CharitySerializer(serializers.ModelSerializer):
@@ -104,6 +104,10 @@ class SearcheventSerializer(serializers.ModelSerializer):
 class RecommandSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
     type = serializers.IntegerField(required=True)
+
+
+class TopsponsorSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
 
 
 class ShowEventSerializer(serializers.Serializer):
@@ -670,6 +674,8 @@ class ShowEventbyC(generics.GenericAPIView):
                 n = model_to_dict(n)
                 for i in range(len(n['Tags'])):
                     n['Tags'][i] = model_to_dict(n['Tags'][i])
+                for i in range(len(n['Sponsor'])):
+                    n['Sponsor'][i] = n['Sponsor'][i].email
                 n.pop('Charity')
                 print(n)
                 data.append(n)
@@ -694,16 +700,19 @@ class ShowEventbyS(generics.GenericAPIView):
         if not sponsor:
             return Response({"message": 'charity does not exist'})
         sponsor = sponsor[0]
-        events = Event.objects.filter(Sponsor__incontains=sponsor)
+        events = Event.objects.all()
         data = []
         if events:
             for n in events:
                 n = model_to_dict(n)
-                for i in range(len(n['Tags'])):
-                    n['Tags'][i] = model_to_dict(n['Tags'][i])
-                n.pop('Charity')
-                print(n)
-                data.append(n)
+                if sponsor in n['Sponsor']:
+                    for i in range(len(n['Tags'])):
+                        n['Tags'][i] = model_to_dict(n['Tags'][i])
+                    for i in range(len(n['Sponsor'])):
+                        n['Sponsor'][i] = n['Sponsor'][i].email
+                    n['Charity'] = Charity.objects.filter(pk=n['Charity'])[0].email
+                    print(n)
+                    data.append(n)
         return Response({"events_list": data})
 
 
@@ -721,11 +730,15 @@ class ShowEvent(generics.GenericAPIView):
         if not serializer.is_valid():
             return Response({"message": str(serializer.errors), "data": {}})
         title = (serializer.data)['title']
+        print(title)
         event = Event.objects.filter(title=title)
         if event:
-            event = model_to_dict(event)
+            event = model_to_dict(event[0])
             for i in range(len(event['Tags'])):
                 event['Tags'][i] = model_to_dict(event['Tags'][i])
+            for i in range(len(event['Sponsor'])):
+                event['Sponsor'][i] = event['Sponsor'][i].email
+            event['Charity'] = Charity.objects.filter(pk=event['Charity'])[0].email
             print(event)
         return Response({"events_list": event})
 
@@ -828,7 +841,7 @@ class SearchEvent(generics.GenericAPIView):
         if not keyword:
             return Response({"message": "No keyword"})
         events = Event.objects.filter(
-            Q(title__icontains=keyword) | Q(description__icontains=keyword) | Q(Charity__icontains=keyword)
+            Q(title__icontains=keyword) | Q(description__icontains=keyword)
         )
         data = []
         if events:
@@ -836,7 +849,9 @@ class SearchEvent(generics.GenericAPIView):
                 n = model_to_dict(n)
                 for i in range(len(n['Tags'])):
                     n['Tags'][i] = model_to_dict(n['Tags'][i])
-                n.pop('Charity')
+                for i in range(len(n['Sponsor'])):
+                    n['Sponsor'][i] = n['Sponsor'][i].email
+                n['Charity'] = Charity.objects.filter(pk=n['Charity'])[0].email
                 print(n)
                 data.append(n)
         return Response({"events_list": data})
@@ -866,7 +881,7 @@ class Recommandations(generics.GenericAPIView):
 class Topsponsors(generics.GenericAPIView):
     authentication_classes = []
     permission_classes = []
-    serializer_class = RecommandSerializer
+    serializer_class = TopsponsorSerializer
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -877,4 +892,3 @@ class Topsponsors(generics.GenericAPIView):
         sorted_sponsors = sorted(sponsors.items(), key=lambda kv: (kv[1], kv[0]))
         print(sorted_sponsors)
         return Response({"data": sorted_sponsors[:10]})
-

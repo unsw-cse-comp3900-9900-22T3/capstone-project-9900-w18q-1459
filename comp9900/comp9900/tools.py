@@ -4,10 +4,10 @@ from .models import Charity, Sponsor, Event, Needs, SponsorScore, CharityScore, 
 def get_charity_sponsor(email):
     charity = Charity.objects.filter(email=email)
     sponsors = {}
-    events = Event.objects.filter(Charity=charity)
+    events = Event.objects.filter(Charity=charity[0])
     if charity and events:
         for e in events:
-            for s in e.Sponsor:
+            for s in e.Sponsor.all():
                 if s.sponsor_name not in sponsors.keys():
                     sponsors[s.email] = 0
                 obj = SponsorEvent.objects.filter(sponsor=s, event=e)
