@@ -85,7 +85,7 @@ class ChooseHelpSerializer(serializers.Serializer):
 
 class FollowSerializer(serializers.Serializer):
     sponsor_email = serializers.EmailField(required=True)
-    charity_email = serializers.CharField(required=True, max_length=255)
+    charity_email = serializers.EmailField(required=True)
 
 
 class CreateNeedsSerializer(serializers.Serializer):
@@ -488,7 +488,7 @@ class FollowView(generics.GenericAPIView):
             return Response({"message": str(serializer.errors), "data": {}})
         data = (serializer.data)
         sponsor = Sponsor.objects.filter(email=data['sponsor_email'])
-        charity = Sponsor.objects.filter(email=data['charity_email'])
+        charity = Charity.objects.filter(email=data['charity_email'])
         if not sponsor:
             return Response({"message": 'sponsor does not exist'})
         if not charity:

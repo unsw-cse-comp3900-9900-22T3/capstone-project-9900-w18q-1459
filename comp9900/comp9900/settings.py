@@ -135,4 +135,4 @@ CHANNEL_LAYERS = {
         },
     },
 }
-ASGI_APPLICATION = 'exmchannels.routing.application'
+ASGI_APPLICATION = 'comp9900.routing.application'
