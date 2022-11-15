@@ -889,6 +889,6 @@ class Topsponsors(generics.GenericAPIView):
             return Response({"message": str(serializer.errors), "data": {}})
         data = (serializer.data)
         sponsors = get_charity_sponsor(data['email'])
-        sorted_sponsors = sorted(sponsors.items(), key=lambda kv: (kv[1], kv[0]))
+        sorted_sponsors = sorted(sponsors.items(), key=lambda kv: kv[1][0])
         print(sorted_sponsors)
         return Response({"data": sorted_sponsors[:10]})

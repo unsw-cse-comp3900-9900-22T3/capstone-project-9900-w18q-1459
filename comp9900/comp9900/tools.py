@@ -9,10 +9,10 @@ def get_charity_sponsor(email):
         for e in events:
             for s in e.Sponsor.all():
                 if s.sponsor_name not in sponsors.keys():
-                    sponsors[s.email] = 0
+                    sponsors[s.email] = [0, s.sponsor_name]
                 obj = SponsorEvent.objects.filter(sponsor=s, event=e)
                 if obj:
-                    sponsors[s.email] += obj[0].money
+                    sponsors[s.email][0] += obj[0].money
     return sponsors
 
 
