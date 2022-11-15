@@ -496,7 +496,7 @@ class FollowView(generics.GenericAPIView):
         charities = sponsor[0].follows.all()
         if charities and charity in charities:
             return Response({"message": 'has followed'})
-        sponsor[0].follows.add(charity)
+        sponsor[0].follows.add(charity[0])
         return Response({"message": 'has added'})
 
 
@@ -516,13 +516,13 @@ class UnfollowView(generics.GenericAPIView):
             return Response({"message": str(serializer.errors), "data": {}})
         data = (serializer.data)
         sponsor = Sponsor.objects.filter(email=data['sponsor_email'])
-        charity = Sponsor.objects.filter(email=data['charity_email'])
+        charity = Charity.objects.filter(email=data['charity_email'])
         if not sponsor:
             return Response({"message": 'sponsor does not exist'})
         if not charity:
             return Response({"message": 'charity does not exist'})
-        sponsor[0].follows.remove(charity)
-        return Response({"message": 'has added'})
+        sponsor[0].follows.remove(charity[0])
+        return Response({"message": 'has unfollowed'})
 
 
 class ShowfollowView(generics.GenericAPIView):
@@ -547,7 +547,7 @@ class ShowfollowView(generics.GenericAPIView):
         data = []
         if charity:
             for n in charity:
-                data.append({'email': charity.email, 'name': charity.charity_name})
+                data.append({'email': n.email, 'name': n.charity_name})
         return Response({"follow_list": data})
 
 
