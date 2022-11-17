@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sponsor Homepage</title>
+
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/sponsor.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    
+    <script src="../lib/jquery-3.5.1.js"></script>
+    <script src="../lib/axios.0.21.1.min.js"></script>
+    <script src="../lib/vue-2.6.12.js"></script>
+    <script src="../lib/vue-router-3.4.9.js"></script>
+    <script src="../js/common.js"></script>
+
+  </head>
+  <body>
+    
+<!-- <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4" id="navbar">
+  <div class="container-fluid">
+    <a class="navbar-brand" :href="'sponsor_show.html?from=sponsor&email=' + email">CMS(Sponsor)</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav me-auto mb-2 mb-md-0">
+      </ul>
+      <form class="d-flex" role="search">
+        <a class="btn btn-outline-success" href="profile_sponsor.html">My Account</a>
+        <a class="btn btn-outline-success" href="login.html">Logout</a>
+      </form>
+    </div>
+  </div>
+</nav> -->
+
+<div id="navbar">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-3">
+        <img src="../imgs/cms.png" class="logo-img">
+      </div>
+      <div class="col-4">
+
+      </div>
+      <div class="col-2">
+        <a class="btn btn-outline-success btn-cums btn-long" href="profile_sponsor.html">My Account</a>
+      </div>
+      <div class="col-2">
+        <a class="btn btn-outline-success btn-cums btn-long" href="login.html">Logout</a>
+      </div>
+    </div>
+    <div class="line-bg">
+      <img src="../imgs/line.png" alt="">
+    </div>
+  </div>
+  
+</div>
+
+<div class="container" id="main">
+  <div class="row">
+    <div class="col-3">
+
+      <div class="d-flex flex-column flex-shrink-0 p-3 text-white">
+        <!-- <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+          <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+          <span class="fs-4">Sidebar</span>
+        </a>
+        <hr> -->
+        
+        <div class="nav flex-column nav-pills me-3 " id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          <a class="nav-link text-black text-center btn-cums active" href="#/" @click="choose">Home</a>
+          <a class="nav-link text-black text-center btn-cums " href="#/follow_list" @click="choose">Follow List</a>
+          <a class="nav-link text-black text-center btn-cums " href="#/find" @click="choose">Find</a>
+          <a class="nav-link text-black text-center btn-cums " href="#/history" @click="choose">History Event</a>
+          <a class="nav-link text-black text-center btn-cums " href="#/chat" @click="choose">Chat</a>
+          <a class="nav-link text-black text-center btn-cums " href="#/helps" @click="choose">Help List</a>
+          <a class="nav-link text-black text-center btn-cums " href="#/review" @click="choose">Annual Review</a>
+        </div>
+        <!-- <hr> -->
+      </div>
+
+    </div>
+    <div class="col-9">
+      <router-view ></router-view>
+    </div>
+  </div>
+</div>
+
+<div style="display:none">
+
+  <!-- Home -->
+    <div id="com_home">
+      <div class="welcome" id="v-pills-home">
+        <div class="row">
+
+          Dear {{user.name}}:<br>
+        </div>
+        <div class="row">
+          <div class="col-1"></div>
+          <div class="col-11">
+            Welcom to CMS!
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  <!-- Follow list-->
+  <div id="com_follow_list">
+    <div>
+      <div class="row mb-2" v-for="(item, index) in charity_list" :key="index">
+        <div class="col-2">
+          <img src="../imgs/avatar.jpg" alt="" class="avatar">
+        </div>
+        <div class="col-3 pt-4">{{item.name}}</div>
+        <div class="col-3 pt-3">
+          <a class="btn btn-primary" :href="'#/chat_with?email=' + item.email">Chat</a>
+        </div>
+        <div class="col-3 pt-3">
+          <button class="btn btn-danger" @click="unfollow(item.email)">Unfollow</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <!-- Find -->
+  <div id="com_find">
+    <div>
+      <div class="row mb-2">
+        <div class="col-9">
+          <input type="text" class="form-control" v-model="query">
+        </div>
+        <div class="col-3">
+          <button class="btn btn-primary" @click="search">Search</button>
+        </div>
+      </div>
+      <div class="row border ps-2 line-list">
+        <div class="col-12 line" v-for="(item, index) in event_list" :key="index">
+          {{index+1}}. <a :href="'#/event_detail?title=' + item.title">{{item.title}}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- HIstory event -->
+  <div id="com_history">
+    <div class="line-list">
+      <div class="line row pb-2 pt-3 border" v-for="(item, index) in event_list" :key="index">
+        <div class="col-9">
+          <a :href="'#/event_detail?title=' + item.title">
+            <strong>{{item.title}}</strong>
+          </a>
+        </div>
+        <div class="col-3">{{item.state}}</div>
+      </div>
+    </div>
+  </div>
+  <!-- Event detail -->
+  <div id="com_event_detail">
+    <div>
+      <div class="row mb-2">
+        <div class="col-2 offset-4"><strong>{{event.title}}</strong></div>
+        <div class="col-2 offset-1">({{event.state}})</div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-2">Title</div>
+        <div class="col-4">
+          <input type="text" class="form-control" v-model="event.title">
+        </div>
+        <div class="col-2">Start Date</div>
+        <div class="col-4">
+          <input type="text" class="form-control" v-model="event.start_date">
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-2">Location</div>
+        <div class="col-4">
+          <input type="text" class="form-control" v-model="event.location">
+        </div>
+        <div class="col-2">End Date</div>
+        <div class="col-4">
+          <input type="text" class="form-control" v-model="event.end_date">
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-2">Tags</div>
+        <div class="col-4">
+          <input type="text" class="form-control" v-model="event.tag_str">
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-2">Fund Amount</div>
+        <div class="col-4">
+          <input type="text" class="form-control" v-model="event.target_f">
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-2">Charity</div>
+        <div class="col-4">
+          <a :href="'charity_show.html?from=sponsor&email=' + event.Charity">{{charity.charity_name}}</a>
+        </div>
+      </div>
+      <div class="row mb-2" v-if="event.state=='Open'">
+        <div class="col-2">Donate</div>
+        <div class="col-4">
+          <input type="text" class="form-control" v-model="money">
+        </div>
+        <button class="col-2  btn btn-primary" @click="donate">Donate</button>
+        <!-- <button class="col-3 offset-1 btn btn-primary">End the Event</button> -->
+      </div>
+      
+      <div class="row mb-1" v-if="event.state=='Closed'">
+        <div class="col-5">Rating for this charity:</div>
+        <div class="col-3 " id="charity-stars" data-rank="1">
+          <template  v-for="(s_item, s_i) in [1,1,1,1,1]" >
+            <i class="fa fa-star-o" @click="rankSelect('charity-stars', s_i)"></i>
+          </template>
+        </div>
+        <div class="col-2">
+          <button class="btn btn-primary btn-small" @click="rank()">Submit</button>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <a class="col-2 offset-4 btn btn-primary" href="#/history">Back</a>
+        <!-- <button class="col-3 offset-1 btn btn-primary">End the Event</button> -->
+      </div>
+    </div>
+  </div>
+  <!-- Chat -->
+  <div id="com_chat">
+    <div>
+      <div class="row mb-2" v-for="(item, index) in charity_list" :key="index">
+        <div class="col-2">
+          <img src="../imgs/avatar.jpg" alt="" class="avatar">
+        </div>
+        <div class="col-5 pt-4">
+          <a :href="'#/chat_with?email=' + item.email">{{item.name}}</div></a>
+        <div class="col-5 pt-3">
+          <!-- <button class="btn btn-danger">Delete</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Chat with -->
+  <div id="com_chat_with">
+    <div class="border chat_box">
+      <div class="row">
+        <div class="col-2 offset-4">{{user.charity_name}}</div>
+      </div>
+      <div class="chat_messages" id="chat_messages">
+
+      </div>
+      <div class="chat_input">
+        <div class="row">
+
+          <div class="col-8 offset-1">
+            <input type="text" class="form-control" v-model="text">
+          </div>
+          <button class="btn btn-primary col-2" @click="sendMsg">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Helps -->
+  <div id="com_helps">
+    <div>
+      <div class="row mb-2 bg-dark text-white pb-4 pt-4 ps-4">Help List</div>
+      <div class="row mb-2" v-for="(item, index) in help_list" :key="index">
+        <div class="col-9">
+          {{index+1}}. {{item}}
+        </div>
+        <div class="col-3">
+          <button class="btn btn-danger" @click="delete_help(item)">Delete</button>
+        </div>
+      </div>
+      <a class="btn btn-primary" href="#/create_need">Create</a>
+    </div>
+  </div>
+  <!-- Create need -->
+  <div id="com_create_need">
+    <div>
+
+      <div class="row mb-4 ">
+        <div class="rol pt-4 pb-4 bg-dark text-white text-center">
+          Help Select
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-4 mb-2" v-for="(item, index) in need_list" :key="index">
+          <div class="row">
+            <div class="col-6">{{item}}</div>
+            <div class="col-6"><a class="btn btn-primary" @click="add_help_to_s(item)">Add</a></div>
+          </div>
+        </div>
+      </div>
+      <!-- Create -->
+      <div class="row mb-2">
+        <div class="col-2 offset-5">
+          <a href="" class="btn btn-primary">Finish</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Annual Review -->
+  <div id="com_review">
+    <div class="review-box">
+      <div class="text-center">
+        <h1>Annual Review</h1>
+      </div>
+      <h3>Dear {{name}}:</h3>
+      <div class="review-text">
+        In this year, you have followed <span class="hot">{{charity_count}}</span> charities<br>
+        <span class="hot">{{charity_name}}</span> is your favourite one<br>
+        <span class="hot">{{keyword}}</span> is your favourite keywords<br>
+        You have supported <span class="hot">{{keyword_count}}</span> times for this keywords<br>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <script src="../js/sponsor.js"></script>
+
+      
+  </body>
+</html>

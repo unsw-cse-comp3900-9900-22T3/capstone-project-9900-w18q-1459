@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Charity Homepage</title>
+
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/charity.css">
+    <link rel="stylesheet" href="../lib/font-awesome-4.7.0/css/font-awesome.min.css">
+
+    <script src="../js/util.js"></script>
+    <script src="../lib/jquery-3.5.1.js"></script>
+    <script src="../lib/axios.0.21.1.min.js"></script>
+    <script src="../lib/vue-2.6.12.js"></script>
+    <script src="../lib/vue-router-3.4.9.js"></script>
+    <script src="../js/common.js"></script>
+  </head>
+  <body >
+    
+<div id="navbar">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-3">
+        <img src="../imgs/cms.png" class="logo-img">
+      </div>
+      <div class="col-4">
+
+      </div>
+      <div class="col-2">
+        <a class="btn btn-outline-success btn-cums btn-long" href="profile.html">My Account</a>
+      </div>
+      <div class="col-2">
+        <a class="btn btn-outline-success btn-cums btn-long" href="login.html">Logout</a>
+      </div>
+    </div>
+    <div class="line-bg">
+      <img src="../imgs/line.png" alt="">
+    </div>
+  </div>
+  
+</div>
+
+<div class="container" id="main">
+  <div class="row">
+    <div class="col-3">
+
+      <div class="d-flex flex-column flex-shrink-0 p-3 text-white ">
+        <!-- <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+          <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+          <span class="fs-4">Sidebar</span>
+        </a>
+        <hr> -->
+        
+        <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          <a class="nav-link text-black text-center btn-cums active" href="#/" @click="choose">Home</a>
+          <a class="nav-link text-black text-center btn-cums " href="#/event" @click="choose">Event release</a>
+          <a class="nav-link text-black text-center btn-cums " href="#/history" @click="choose">Historical event</a>
+          <a class="nav-link text-black text-center btn-cums" href="#/chat" @click="choose">Chat</a>
+          <a class="nav-link text-black text-center btn-cums " href="#/needs" @click="choose">List of needs</a>
+        </div>
+        <!-- <hr> -->
+      </div>
+
+    </div>
+    <div class="col-9">
+      <router-view ></router-view>
+    </div>
+  </div>
+</div>
+<div style="display:none">
+  
+  <div class="tab-content" id="v-pills-tabContent">
+    <!-- Home -->
+    <div id="com_home">
+      <div class="welcom" id="v-pills-home">
+        <div class="row">
+
+          Dear {{user.name}}:<br>
+        </div>
+        <div class="row">
+          <div class="col-1"></div>
+          <div class="col-11">
+            Welcom to CMS!
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- Event release -->
+    <div id="com_event">
+
+      <div  id="v-pills-event">
+        <div class="row mb-2">
+          <div class="col-2">Title</div>
+          <div class="col-8">
+            <input type="text" class="form-control" v-model="event.title" required="true">
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-2">Location</div>
+          <div class="col-8">
+            <input type="text" class="form-control" v-model="event.location" required="true">
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-2">Fundraising Target</div>
+          <div class="col-8">
+            <input type="text" class="form-control" v-model="event.target_f" required="true">
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-2">Description </div>
+          <div class="col-8">
+            <input type="text" class="form-control" v-model="event.description" required="true">
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-2">Start Date </div>
+          <div class="col-8">
+            <input type="text" class="form-control" v-model="event.start_date" required="true">
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-2">End Date </div>
+          <div class="col-8">
+            <input type="text" class="form-control" v-model="event.end_date" required="true">
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-8 offset-2">
+            <input type="button" class="btn btn-primary" value="Create" @click="createEvent">
+          </div>
+        </div>
+        <div v-if="add_tag">
+
+          <div class="row mb-2">
+            <div class="col-2">Add Tags </div>
+            <div class="col-8">
+              <!-- <input type="text" class="form-control" v-model="event.tags" required="true"> -->
+            </div>
+          </div>
+          <!-- <div class="row mb-2">
+            <div class="col-8 offset-2">
+              <input type="button" class="btn btn-primary" value="Add Tag" @click="addTag">
+            </div>
+          </div> -->
+          
+          <div class="row mb-2">
+            <div class="col-4 mb-2" v-for="(item, index) in need_list" :key="index">
+              <div class="row">
+                <div class="col-6">{{item}}</div>
+                <div class="col-6"><a class="btn btn-primary" @click="add_tag_event(item)">Add</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Historycal Event-->
+    <div id="com_history">
+
+      <div id="v-pills-history" >
+        <div class="row mb-2 border pt-2 pb-2" v-for="(item, index) in events_list" :key="index">
+          <div class="col-10">
+            <a :href="'#/event_detail?title=' + item.title">{{item.title}}</a>
+          </div>
+          <div class="col-2">
+            {{item.state}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Event detail -->
+    <div id="com_event_detail">
+      <div>
+        <div class="row mb-2">
+          <div class="col-2 offset-4"><strong>{{event.title}}</strong></div>
+          <div class="col-2 offset-1">({{event.state}})</div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-2">Title</div>
+          <div class="col-4">
+            <input type="text" class="form-control" v-model="event.title">
+          </div>
+          <div class="col-2">Start date</div>
+          <div class="col-4">
+            <input type="text" class="form-control" v-model="event.start_date">
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-2">Location</div>
+          <div class="col-4">
+            <input type="text" class="form-control" v-model="event.location">
+          </div>
+          <div class="col-2">End date</div>
+          <div class="col-4">
+            <input type="text" class="form-control" v-model="event.end_date">
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-2">Tags</div>
+          <div class="col-4">
+            <div class="row mb-1"  v-for="(item, index) in event.Tags" :key="index">
+              <div class="col-8">
+                {{item.needs_name}}
+              </div>
+              <div class="col-4">
+                <button class="btn btn-danger btn-sm" @click="delete_tag(item.needs_name)">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2" v-if="event.state != 'Closed'">
+          <div class="col-2">Sponsor List</div>
+          <div class="col-4">
+            <div class="row mb-1" v-for="(item, index) in event.Sponsor" :key="index">
+              <div class="col-3"><img src="../imgs/avatar.jpg" alt="" class="small-avatar"></div>
+              <div class="col-9">{{item}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-2">Fund Amount</div>
+          <div class="col-4">
+            <input type="text" class="form-control" v-model="event.target_f">
+          </div>
+        </div>
+        <div class="row mb-2" v-if="event.state == 'Closed'">
+          <div class="col-2">Sponsor List</div>
+          <div class="col-8">
+            <div class="row mb-1" v-for="(item, index) in event.sponsor_list" :key="index">
+              <div class="col-1"><img src="../imgs/avatar.jpg" alt="" class="small-avatar"></div>
+              <div class="col-4">{{item.name}}</div>
+              <div class="col-3" :id="index + '-stars'" data-rank="1">
+                <template  v-for="(s_item, s_i) in [1,1,1,1,1]" >
+                  <em class="fa fa-star-o" @click="rankSelect(index + '-stars', s_i)"></em>
+                </template>
+              </div>
+              <div class="col-2">
+                <button class="btn btn-primary btn-small" @click="rank(item.name + '-stars', item.email)">Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row mb-2" v-if="event.state != 'Closed'">
+          <div class="col-2">Add Tags </div>
+          <div class="col-8">
+            <!-- <input type="text" class="form-control" v-model="event.tags" required="true"> -->
+          </div>
+        </div>
+        <div class="row mb-2" v-if="event.state != 'Closed'">
+          <div class="col-4 mb-2" v-for="(item, index) in need_list" :key="index">
+            <div class="row">
+              <div class="col-6">{{item}}</div>
+              <div class="col-6"><a class="btn btn-primary" @click="add_tag_event(item)">Add</a></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <a class="col-2 offset-4 btn btn-primary" href="#/history">Back</a>
+          <!-- <button class="col-3 offset-1 btn btn-primary" v-if="event.state != 1">End the Event</button> -->
+        </div>
+      </div>
+    </div>
+    <!-- Chat -->
+    <div id="com_chat">
+
+      <div  id="v-pills-chat" >
+        <div class="row mb-2" v-for="(item, index) in sponsors_list" :key="index">
+          <div class="col-2">
+            <img src="../imgs/avatar.jpg" alt="" class="avatar">
+          </div>
+          <div class="col-6 pt-4">
+            <a :href="'#/chat_with?email=' + item.email"> {{item.name}}</a>
+          </div>
+          <div class="col-2">
+            <!-- <button class="btn btn-primary">Delete</button> -->
+          </div>
+          <!-- <div class="col-2">1</div> -->
+        </div>
+      </div>
+    </div>
+    <!-- Chat with -->
+    <div id="com_chat_with">
+      <div class="border chat_box">
+        <div class="row">
+          <div class="col-2 offset-4">
+            <a :href="'sponsor_show.html?from=charity&email='+user.email">{{user.sponsor_name}}</a>
+          </div>
+          <!-- <div class="col-2">
+            <a href="#">Accept</a>
+          </div>
+          <div class="col-2">
+            <a href="#">Decline</a>
+          </div> -->
+        </div>
+        <div class="chat_messages" id="chat_messages">
+  
+        </div>
+        <div class="chat_input">
+          <div class="row">
+
+            <div class="col-8 offset-1">
+              <input type="text" class="form-control" v-model="text">
+            </div>
+            <button class="btn btn-primary col-2" @click="sendMsg">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- List of needs -->
+    <div id="com_needs">
+
+      <div id="v-pills-needs">
+        <div class="row">
+
+          <div class="col-5">
+            <div class="row">List of Needs</div>
+            <div class="row mb-2" v-for="(item, index) in need_list" :key="index">
+              <div class="col-6">{{item}}</div>
+              <div class="col-6">
+                <button class="btn btn-danger" @click="delete_need(item)">Delete</button>
+              </div>
+            </div>
+            <div>
+              <a type="button" class="btn btn-primary" href="#/create_need">Create</a>
+            </div>
+          </div>
+          <div class="col-7">
+            <div class="row">Sponsor Recommendations</div>
+            <div class="row mb-2">
+              <div class="col-12">
+                <input type="radio" name="setting" @click="get_recommend(2)"> sponsors with no charity connections only
+              </div>
+              <div class="col-12 ">
+                <input type="radio"  name="setting" @click="get_recommend(1)"> sponsors with charity connections only
+              </div>
+              <div class="col-12 ">
+                <input type="radio"  name="setting" checked="checked" @click="get_recommend(0)"> sponsors with both types
+              </div>
+            </div>
+            <div class="row mb-2" v-for="(item, index) in sponsor_list" :key="index">
+              <div class="col-2"><img src="../imgs/avatar.jpg" alt="" class="small-avatar"></div>
+              <div class="col-5">{{item.name}}</div>
+              <div class="col-5">
+                <a :href="'#/chat_with?email=' + item.email" class="btn btn-primary">Chat</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Create need -->
+    <div id="com_create_need">
+      <div>
+
+        <div class="row mb-4 ">
+          <div class="rol pt-4 pb-4 bg-dark text-white text-center">
+            Need Select
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-4 mb-2" v-for="(item, index) in need_list" :key="index">
+            <div class="row">
+              <div class="col-6">{{item}}</div>
+              <div class="col-6"><a class="btn btn-primary" @click="add_need_to_c(item)">Add</a></div>
+            </div>
+          </div>
+        </div>
+        <!-- Create -->
+        <div class="row mb-2">
+          <div class="col-3">Create</div>
+          <div class="col-4">
+            <input type="text" class="form-control" v-model="need_name">
+          </div>
+          <div class="col-3">
+            <a href="#" class="btn btn-primary" @click="create_need">Submit</a>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-2 offset-5">
+            <a href="" class="btn btn-primary">Finish</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+
+    <!-- <script src="../lib/bootstrap.min.js"></script> -->
+
+    <script src="../js/charity.js"></script>
+  </body>
+</html>

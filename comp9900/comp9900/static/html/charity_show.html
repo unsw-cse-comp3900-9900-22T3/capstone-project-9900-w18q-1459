@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Charity Out page</title>
+
+
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/charity.css">
+
+  <script src="../js/util.js"></script>
+  <script src="../lib/jquery-3.5.1.js"></script>
+  <script src="../lib/axios.0.21.1.min.js"></script>
+  <script src="../lib/vue-2.6.12.js"></script>
+  <script src="../lib/vue-router-3.4.9.js"></script>
+  <script src="../js/common.js"></script>
+</head>
+
+<body>
+
+  <div class="container" id="main">
+
+    <div class=" text-center text-white bg-dark pt-4 pb-4 mb-4">
+      Charity Page
+    </div>
+    <div class="row mb-2">
+      <div class="col-3">Username</div>
+      <div class="col-8">
+        <input type="text" class="form-control" v-model="user.charity_name">
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-3">Self-description</div>
+      <div class="col-8">
+        <textarea name="" id="" cols="30" rows="2" class="form-control" v-model="user.description"></textarea>
+      </div>
+    </div>
+    
+    <div class="row mb-2">
+
+      <div class="col-5">
+        
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" >List of Needs</button>
+        </div>
+        <div class="row mb-2" v-for="(item, index) in need_list" :key="index">
+          <div class="col-10">{{index+1}}.{{item}}</div>
+        </div>
+      </div>
+      <div class="col-7">
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#nav-home">All Sponsors</button>
+          <button class="nav-link"  data-bs-toggle="tab" data-bs-target="#nav-profile" >Top 10 Sponsors</button>
+        </div>
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="nav-home" >
+            
+            <div class="row mb-2" v-for="(item, index) in sponsor_list" :key="index">
+              <div class="col-2"><img src="../imgs/avatar.jpg" alt="" class="small-avatar"></div>
+              <div class="col-8">{{item.name}}</div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="nav-profile">
+            <div class="row mb-2" v-for="(item, index) in top10_sponsors" :key="index">
+              <div class="col-2"><img src="../imgs/avatar.jpg" alt="" class="small-avatar"></div>
+              <div class="col-8">{{item.name}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-4">
+
+      </div>
+      <div class="col-4">
+        <button class="btn btn-primary" :disabled="followed" v-if="from=='sponsor'" @click="follow">{{followed?'Following':'Follow'}}</button>
+      </div>
+      <div class="col-3 offset-1">
+        <button class="btn btn-primary" onclick="history.back()">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/charity_show.js"></script>
+  <script src="../lib/bootstrap.min.js"></script>
+</body>
+
+</html>

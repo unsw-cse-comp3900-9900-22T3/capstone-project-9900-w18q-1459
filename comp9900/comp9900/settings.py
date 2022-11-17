@@ -37,8 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'comp9900',
     'rest_framework',
-    'channels',
-    'chat',
 ]
 
 MIDDLEWARE = [
@@ -126,13 +124,4 @@ REST_FRAMEWORK = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
-
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [('127.0.0.1', 6379)],
-        },
-    },
-}
-ASGI_APPLICATION = 'comp9900.routing.application'
+ASGI_APPLICATION = 'exmchannels.routing.application'

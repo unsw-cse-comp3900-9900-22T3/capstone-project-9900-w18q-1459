@@ -88,3 +88,19 @@ class CharityScore(models.Model):
     class Meta:
         managed = True
         verbose_name = "rating charity"
+
+
+class Message(models.Model):
+    charity = models.ForeignKey(Charity, related_name='sent_messages', on_delete=models.SET_NULL, blank=True, null=True,
+                                verbose_name='sender')
+    sponsor = models.ForeignKey(Sponsor, related_name='receive_messages', on_delete=models.SET_NULL, blank=True,
+                                null=True, verbose_name='receiver')
+    message = models.TextField(blank=True, null=True, verbose_name='content')
+    unread = models.BooleanField(default=True, db_index=True, verbose_name='if read')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='created time')
+
+    def mark_as_read(self):
+        if self.unread:
+            self.unread = False
+            self.save()
+

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Charity Out page</title>
+
+
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/charity.css">
+
+  <script src="../js/util.js"></script>
+  <script src="../lib/jquery-3.5.1.js"></script>
+  <script src="../lib/axios.0.21.1.min.js"></script>
+  <script src="../lib/vue-2.6.12.js"></script>
+  <script src="../lib/vue-router-3.4.9.js"></script>
+  <script src="../js/common.js"></script>
+</head>
+
+<body>
+
+  <div class="container" id="main">
+    <div class="row">
+      <div class="col-8 offset-2">
+
+        <div class="row">
+          <div class="col text-center bg-dark text-white pb-4 pt-4 mb-4">
+            <strong>Sponsor Page</strong>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-2">Username</div>
+          <div class="col-10">
+            <input type="text" name="username" id="username" class="form-control" v-model="user.sponsor_name">
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-2">Self-descriptions</div>
+          <div class="col-10">
+            <textarea name="username" id="username" class="form-control" v-model="user.description">
+              </textarea>
+          </div>
+        </div>
+        <div class="row mb-2">
+    
+          <div class="col-5">
+            
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#nav-home">Help List</button>
+            </div>
+            <div class="row mb-2" v-for="(item, index) in help_list" :key="index">
+              <div class="col-10">{{index+1}}.{{item}}</div>
+            </div>
+          </div>
+          <div class="col-7">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <button class="nav-link active" >Charity Connection</button>
+            </div>
+            <div class="row mb-2" v-for="(item, index) in charity_list" :key="index">
+              <div class="col-2"><img src="../imgs/avatar.jpg" alt="" class="small-avatar"></div>
+              <div class="col-8">{{item.name}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-4">
+    
+          </div>
+          <div class="col-4">
+          </div>
+          <div class="col-3 offset-1">
+            <button class="btn btn-primary" onclick="history.back()">Back</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
+  <script src="../js/sponsor_show.js"></script>
+</body>
+
+</html>

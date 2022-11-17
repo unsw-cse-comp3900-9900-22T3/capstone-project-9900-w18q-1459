@@ -1,0 +1,30 @@
+
+
+api/user/register   用户注册
+api/user/login   用户登录
+api/user/logout   用户登出
+
+api/charity/create  创建机构资料
+api/charity/edit  编辑机构资料
+api/charity/info  返回机构信息
+api/charity/create_need    创建需求
+api/charity/needs    返回需求列表
+api/charity/match    返回匹配的 charity 列表
+
+
+
+api/sponsor/create 创建sponsor资料
+api/sponsor/search 搜索返回charity信息
+api/sponsor/info   返回sponsor 信息
+api/sponsor/top   返回前10名sponsor 信息
+api/sponsor/match   返回匹配的 sponsor 列表
+api/sponsor/follow_list   返回关注的 sponsor 列表
+api/sponsor/follow   关注 sponsor
+api/sponsor/unfollow   取消关注 sponsor
+api/sponsor/event   创建活动
+api/sponsor/event_list   返回历史创建活动
+
+
+api/message/list    返回消息列表
+api/message/info    返回单条消息内容
+api/message/reply    回复消息

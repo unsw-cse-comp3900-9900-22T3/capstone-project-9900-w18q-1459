@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang='zh'>
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/register.css">
+  <script src="../lib/jquery-3.5.1.js"></script>
+  <script src="../lib/bootstrap.min.js"></script>
+  <script src="../lib/axios.0.21.1.min.js"></script>
+  <script src="../lib/vue-2.6.12.js"></script>
+</head>
+
+<body class="text-center">
+
+  <main class="form-signin w-100 m-auto" id="main">
+    <form onsubmit="return false;">
+      <h1 class="h3 mb-3 fw-normal">Create New Account</h1>
+
+      <div class="form-floating">
+        <input type="email" v-model="email" class="form-control" id="floatingInput" placeholder="name@example.com" required="true">
+        <label for="floatingInput">Email</label>
+      </div>
+      <div class="form-floating">
+        <input type="password" v-model="password" class="form-control" id="floatingPassword" placeholder="Password" required="true">
+        <label for="floatingPassword">Password</label>
+      </div>
+      <div class="form-floating">
+        <input type="password" v-model="confirm_password" class="form-control" placeholder="Confirm Password" required="true">
+        <label for="floatingPassword">Confirm Password</label>
+      </div>
+      <div class="form-floating">
+        <input type="text" v-model="name" class="form-control" placeholder="Username" required="true">
+        <label for="floatingPassword">Username</label>
+      </div>
+      <div class="form-floating">
+        <input type="text" v-model="description" class="form-control" placeholder="Self-description" required="true">
+        <label for="floatingPassword">Self-description</label>
+      </div>
+      <label for="">Please select an account type</label><br>
+      <input type="radio" name="user-type" v-model="user_type" id="type1" class="form-check-input" value="0">
+      <label class="form-check-label" for="type1">sponsor</label>
+      <input type="radio" name="user-type" v-model="user_type" id="type2" class="form-check-input" value="1">
+      <label class="form-check-label" for="type2">charity</label>
+
+      <button class="w-100 btn btn-lg btn-primary mt-2" v-on:click="register">Create</button>
+      <a class="w-100 btn btn-lg btn-primary mt-2" href="login.html">Login</a>
+    </form>
+  </main>
+
+  <div class="modal fade" id="info_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Info</h5>
+        </div>
+        <div class="modal-body">
+          Login success.
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/register.js"></script>
+</body>
+
+</html>

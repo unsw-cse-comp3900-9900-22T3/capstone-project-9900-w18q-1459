@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from . import models
 from rest_framework.response import Response
 from rest_framework import serializers
-from .models import Charity, Sponsor, Event, Needs, SponsorScore, CharityScore
+from .models import Charity, Sponsor, Event, Needs, SponsorScore, CharityScore, Message
 from django.db.models import Q
 from django.forms.models import model_to_dict
 from .tools import *
@@ -737,7 +737,7 @@ class ShowEvent(generics.GenericAPIView):
             for i in range(len(event['Tags'])):
                 event['Tags'][i] = model_to_dict(event['Tags'][i])
             for i in range(len(event['Sponsor'])):
-                event['Sponsor'][i] = event['Sponsor'][i].email
+                event['Sponsor'][i] = [event['Sponsor'][i].email, event['Sponsor'][i].sponsor_name]
             event['Charity'] = Charity.objects.filter(pk=event['Charity'])[0].email
             print(event)
         return Response({"events_list": event})
@@ -762,7 +762,10 @@ class UpdateEvent(generics.GenericAPIView):
             return Response({"message": 'charity does not exist'})
         charity = charity[0]
         event.pop('email')
-        Event.objects.filter(event['title']).update(**event)
+        title = event['title']
+        event.pop('title')
+        print(event)
+        Event.objects.filter(title=title).update(**event)
         return Response({"message": 'success'})
 
 
@@ -892,3 +895,74 @@ class Topsponsors(generics.GenericAPIView):
         sorted_sponsors = sorted(sponsors.items(), key=lambda kv: kv[1][0])
         print(sorted_sponsors)
         return Response({"data": sorted_sponsors[:10]})
+
+
+class ChatSerializer(serializers.Serializer):
+    charity = serializers.CharField(required=True)
+    sponsor = serializers.CharField(required=True)
+
+
+class PushSerializer(serializers.Serializer):
+    charity = serializers.CharField(required=True)
+    sponsor = serializers.CharField(required=True)
+    text = serializers.CharField(required=True)
+
+
+class ChatView(generics.GenericAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = ChatSerializer
+
+    def post(self, request):
+        """
+        Register interface
+        """
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"message": str(serializer.errors), "data": {}})
+        data = (serializer.data)
+        charity = data['charity']
+        sponsor = data['sponsor']
+        charity = Charity.objects.filter(charity_name=charity)
+        sponsor = Sponsor.objects.filter(sponsor_name=sponsor)
+        if not charity or not sponsor:
+            return Response(data={'message': 'no such charity or sponsor'})
+        charity = charity[0]
+        sponsor = sponsor[0]
+        data = Message.objects.filter(charity=charity, sponsor=sponsor).order_by('created_at')
+        text = []
+        if data:
+            for i in data:
+                text.append(i.message)
+        return Response(data={'message': text})
+
+
+class PushView(generics.GenericAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = PushSerializer
+
+    def post(self, request):
+        """
+        Register interface
+        """
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"message": str(serializer.errors), "data": {}})
+        data = (serializer.data)
+        charity = data['charity']
+        sponsor = data['sponsor']
+        charity = Charity.objects.filter(charity_name=charity)
+        sponsor = Sponsor.objects.filter(sponsor_name=sponsor)
+        if not charity or not sponsor:
+            return Response(data={'message': 'no such charity or sponsor'})
+        charity = charity[0]
+        sponsor = sponsor[0]
+        text = data['text']
+        msg = Message.objects.create(sponsor=sponsor, charity=charity, message=text)
+        data = Message.objects.filter(charity=charity, sponsor=sponsor).order_by('created_at')
+        text = []
+        if data:
+            for i in data:
+                text.append(i.message)
+        return Response(data={'message': text})

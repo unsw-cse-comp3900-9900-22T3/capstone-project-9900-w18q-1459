@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang='zh'>
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/login.css">
+  <script src="../lib/bootstrap.min.js"></script>
+  <script src="../lib/axios.0.21.1.min.js"></script>
+  <script src="../lib/vue-2.6.12.js"></script>
+</head>
+
+<body >
+  <div class="container" id="main">
+
+    <div class=" text-center text-white bg-dark pt-4 pb-4 mb-4">
+      My Charity Account
+    </div>
+    <div class="row mb-2">
+      <div class="col-3">Username</div>
+      <div class="col-8">
+        <input type="text" class="form-control" v-model="user.name">
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-3">Email</div>
+      <div class="col-8">
+        <input type="text" class="form-control" v-model="user.email">
+      </div>
+    </div>
+    <!-- <div class="row mb-2">
+      <div class="col-3">Recommendation Setting</div>
+      <div class="col-8">
+        <input type="radio" name="setting" checked="checked"> sponsors with no charity connections only
+      </div>
+      <div class="col-8 offset-3">
+        <input type="radio"  name="setting"> sponsors with charity connections only
+      </div>
+      <div class="col-8 offset-3">
+        <input type="radio"  name="setting"> sponsors with both types
+      </div>
+    </div> -->
+    <div class="row mb-2">
+      <div class="col-3">Self-description</div>
+      <div class="col-8">
+        <textarea name="" id="" cols="30" rows="10" class="form-control" v-model="user.description"></textarea>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-8 offset-3">
+        <a href="charity.html" class="btn btn-primary">Back</a>
+        <button  class="btn btn-primary" @click="update">Update</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/profile.js"></script>
+</body>
+
+</html>

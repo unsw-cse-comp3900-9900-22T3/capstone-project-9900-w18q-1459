@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.urls import re_path
+from django.urls import re_path, include
 from django.contrib import admin
 from . import views
 from rest_framework.documentation import include_docs_urls
@@ -45,6 +45,7 @@ urlpatterns = [
     re_path(r'^update_event/', views.UpdateEvent.as_view(), name='update event'),
     re_path(r'^rate_event/', views.RatingEvent.as_view(), name='rate c by s or rate s by c'),
     re_path(r'^add_tag_event/', views.AddtagsView.as_view(), name='add tag to a event'),
+    re_path(r'^del_tag_event/', views.DeletetagsView.as_view(), name='add tag to a event'),
     re_path(r'^show_event/', views.ShowEvent.as_view(), name='show a event'),
     re_path(r'^show_s_event/', views.ShowEventbyS.as_view(), name='show sponsors events'),
     re_path(r'^del_needs/', views.Deleteneeds_cView.as_view(), name='delete needs of a c'),
@@ -52,4 +53,6 @@ urlpatterns = [
     re_path(r'^recommandations/', views.Recommandations.as_view(), name='recommand to a charity'),
     re_path(r'^search_event/', views.SearchEvent.as_view(), name='search event'),
     re_path(r'^Top_sponsor/', views.Topsponsors.as_view(), name='get top sponsor of a charity'),
+    re_path(r'^chat_show/', views.ChatView.as_view(), name='show chat history'),
+    re_path(r'^chat_push/', views.PushView.as_view(), name='push chat'),
 ]

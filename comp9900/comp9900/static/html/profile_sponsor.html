@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sponsor Account</title>
+
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+
+    <script src="../lib/axios.0.21.1.min.js"></script>
+    <script src="../lib/vue-2.6.12.js"></script>
+  </head>
+  <body>
+    <div class="container" id="main">
+      <div class="row">
+        <div class="col-8 offset-2">
+
+          <div class="row">
+            <div class="col text-center bg-dark text-white pb-4 pt-4 mb-4">
+              <strong>My Sponsor Account</strong>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-2">Email</div>
+            <div class="col-5">
+              <input type="text" name="email" id="email" class="form-control" v-model="user.email">
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-2">Username</div>
+            <div class="col-5">
+              <input type="text" name="username" id="username" class="form-control" v-model="user.name">
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-2">Self-descriptions</div>
+            <div class="col-5">
+              <textarea name="username" id="username" class="form-control" v-model="user.description">
+                </textarea>
+            </div>
+            <div class="col-2">
+              <a type="button" class="btn btn-primary" @click="update">Edit</a>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col offset-2">
+              <a href="sponsor.html" class="btn btn-primary">Back</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    
+    
+    <script src="../js/profile_sponsor.js"></script>
+  </body>
+</html>
