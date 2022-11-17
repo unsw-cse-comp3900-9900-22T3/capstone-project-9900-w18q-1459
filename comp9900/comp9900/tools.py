@@ -75,3 +75,16 @@ def get_recommand_sponsor(email):
             if set(helps).intersection(set(needs)):
                 recommand_sponsors.append(s.email)
     return recommand_sponsors
+
+
+def get_charity_count(email):
+    sponsor = Sponsor.objects.filter(email=email)[0]
+    sponsor_events = SponsorEvent.objects.filter(sponsor=sponsor)
+    charity = dict()
+    for i in sponsor_events:
+        if i.event.Charity.charity_name not in charity.keys():
+            charity[i.event.Charity.charity_name] = 1
+        else:
+            charity[i.event.Charity.charity_name] += 1
+    print(charity)
+    return charity

@@ -55,4 +55,6 @@ urlpatterns = [
     re_path(r'^Top_sponsor/', views.Topsponsors.as_view(), name='get top sponsor of a charity'),
     re_path(r'^chat_show/', views.ChatView.as_view(), name='show chat history'),
     re_path(r'^chat_push/', views.PushView.as_view(), name='push chat'),
+    re_path(r'^review/', views.ReviewView.as_view(), name='review'),
+    re_path('chat/', include('chat.urls')),
 ]

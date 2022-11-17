@@ -11,6 +11,7 @@ from .models import Charity, Sponsor, Event, Needs, SponsorScore, CharityScore, 
 from django.db.models import Q
 from django.forms.models import model_to_dict
 from .tools import *
+import operator
 
 
 class CharitySerializer(serializers.ModelSerializer):
@@ -112,6 +113,10 @@ class TopsponsorSerializer(serializers.Serializer):
 
 class ShowEventSerializer(serializers.Serializer):
     title = serializers.CharField(required=True)
+
+
+class ReviewSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
 
 
 class LoginView(generics.GenericAPIView):
@@ -966,3 +971,28 @@ class PushView(generics.GenericAPIView):
             for i in data:
                 text.append(i.message)
         return Response(data={'message': text})
+
+
+class ReviewView(generics.GenericAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = ReviewSerializer
+
+    def post(self, request):
+        """
+        Register interface
+        """
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"message": str(serializer.errors), "data": {}})
+        data = (serializer.data)
+        sponsor = Sponsor.objects.filter(email=data['email'])
+        if not sponsor:
+            return Response({"message": 'No such a sponsor'})
+        sponsor = sponsor[0]
+        charity = get_charity_count(data['email'])
+        charity_count = len(charity.keys())
+        charity_max = max(charity.items(), key=operator.itemgetter(1))[0]
+        print(charity_count, charity_max)
+        max_times = charity[charity_max]
+        return Response({"charity_count": charity_count, "charity_favorite": charity_max, 'sponsor_times': max_times})
