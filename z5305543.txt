@@ -3,17 +3,18 @@ dicsucc about the topic, choose a topic, divide the work in group, query some ma
 week2
 create the web page, write the proposal.
 week3
-write the frontend of login and register page.
+assist in write the frontend of login and register page.
 week4
-prepare for demo A. implement the frontend of homepage.
+prepare for demo A. assist in implementing the frontend of homepage.
 week5
 retrospective A. demo A. improve some of the previous function
 week6
-change the sprint in jira. 
+change the sprint in jira. assist in completing search part.
 week7
-
+assist in completing the event detail part.
 week8
-
+assist in completing the need list and help list.
 week9
-
+write the functionnality detail part of the report. assist in completing recommendation part.
 week10
+assist in comlpeting rate part. complete all of the report with teammates.
