@@ -2,3 +2,18 @@ week 1
 dicsucc about the topic, choose a topic, divide the work in group, query some materials about the topic.
 week2
 create the web page, write the proposal.
+week3
+write the frontend of login and register page.
+week4
+prepare for demo A. implement the frontend of homepage.
+week5
+retrospective A. demo A. improve some of the previous function
+week6
+change the sprint in jira. 
+week7
+
+week8
+
+week9
+
+week10
