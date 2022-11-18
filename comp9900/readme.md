@@ -39,3 +39,4 @@ python3 manage.py runserver
 ```
 daphne -b 127.0.0.1 -p 5000 comp9900.asgi:application
 ```
+Open browser, enter 127.0.0.1:8000/static/html/login.html to the login page.
