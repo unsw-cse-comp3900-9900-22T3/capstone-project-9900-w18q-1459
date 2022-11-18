@@ -1,0 +1,20 @@
+Week1
+I created a JIRA account, connected my github account to the UNSW organization, and asked the tutor to associate the GitHub account with the JIRA account.
+Week2
+Choose what technology to use to complete the project, divide group work, design web page, query related technology websites and materials.
+Week3
+write proposal, draw user flow picture, update MySQL to version 8.0 according to the requirements of the design database.
+Week4
+Start writing the login and registration function, and connect the front and back ends.
+Week5
+Prepare the first demo. Assist in improving the login and registration functions.
+Week6
+Assist team members to complete retrospectivesA.
+Week7
+Prepare the second demo,continue to improve the code.
+Week8
+Assist team members to complete retrospectivesB.
+Week9
+On the Lubuntu 20.4.1 LTS virtual machine image, configure the project environment and deploy the project to the virtual machine environment.
+Week10
+Write the Overview section of the report and the installation requirements.
