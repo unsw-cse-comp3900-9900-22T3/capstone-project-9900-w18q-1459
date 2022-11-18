@@ -29,6 +29,7 @@
 }
 .chat_messages .left{
   float:left;
+  background-color: white;
 }
 .chat_messages .right{
   float:right;

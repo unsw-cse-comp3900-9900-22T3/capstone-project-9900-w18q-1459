@@ -217,9 +217,9 @@
         <div class="row mb-2" v-if="event.state != 'Closed'">
           <div class="col-2">Sponsor List</div>
           <div class="col-4">
-            <div class="row mb-1" v-for="(item, index) in event.Sponsor" :key="index">
+            <div class="row mb-1" v-for="(item, index) in event.sponsor_list" :key="index">
               <div class="col-3"><img src="../imgs/avatar.jpg" alt="" class="small-avatar"></div>
-              <div class="col-9">{{item}}</div>
+              <div class="col-9">{{item.name}}</div>
             </div>
           </div>
         </div>
@@ -227,6 +227,10 @@
           <div class="col-2">Fund Amount</div>
           <div class="col-4">
             <input type="text" class="form-control" v-model="event.target_f">
+          </div>
+          <div class="col-2">Description</div>
+          <div class="col-4">
+            <textarea type="text" class="form-control" v-model="event.description"></textarea>
           </div>
         </div>
         <div class="row mb-2" v-if="event.state == 'Closed'">
@@ -264,7 +268,7 @@
 
         <div class="row mb-2">
           <a class="col-2 offset-4 btn btn-primary" href="#/history">Back</a>
-          <!-- <button class="col-3 offset-1 btn btn-primary" v-if="event.state != 1">End the Event</button> -->
+          <button class="col-3 offset-1 btn btn-primary" @click="update">Update</button>
         </div>
       </div>
     </div>
@@ -293,12 +297,12 @@
           <div class="col-2 offset-4">
             <a :href="'sponsor_show.html?from=charity&email='+user.email">{{user.sponsor_name}}</a>
           </div>
-          <!-- <div class="col-2">
+          <div class="col-2">
             <a href="#">Accept</a>
           </div>
           <div class="col-2">
             <a href="#">Decline</a>
-          </div> -->
+          </div>
         </div>
         <div class="chat_messages" id="chat_messages">
   
@@ -307,7 +311,7 @@
           <div class="row">
 
             <div class="col-8 offset-1">
-              <input type="text" class="form-control" v-model="text">
+              <input type="text" class="form-control" id="chat-message-input" v-model="text" @keyup="inputKeyup">
             </div>
             <button class="btn btn-primary col-2" @click="sendMsg">Send</button>
           </div>

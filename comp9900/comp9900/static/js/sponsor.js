@@ -264,18 +264,65 @@ const com_chat_with = {
   methods: {
     loadData: function(){
       var self = this;
+      self.sponsor = JSON.parse(localStorage.getItem('user'));
       var email = this.$route.query.email;
       var data = {email:email};
       axios.post("/show_c/", data).then(function(resp){
         let res = resp.data;
         console.log('show_s', res);
         self.user = res.data;
+        self.charity = res.data;
+        self.connect();
       });
+    },
+    connect:function(){
+      
+      var self = this;
+      var roomName = self.charity.charity_name + '_' + self.sponsor.name;
+      var hostname = window.location.host.split(':')[0] + ':5000'
+      var url = 'ws://' + hostname + '/ws/chat/' + roomName + '/';
+      console.log('websoket url', url);
+      const chatSocket = new WebSocket(url);
+      self.chatSocket = chatSocket;
+
+      chatSocket.onmessage = function(e) {
+          const data = JSON.parse(e.data);
+          console.log('msg data', data);
+          self.receiveMsg(data);
+      };
+
+      chatSocket.onclose = function(e) {
+          console.error('Chat socket closed unexpectedly');
+      };
+
+    },
+    inputKeyup:function(e){
+      var self = this;
+      if(e.keyCode === 13){
+        self.sendMsg();
+        // self.receiveMsg({from:'abc', message:self.text});
+      }
     },
     sendMsg: function(){
       var self = this;
-      var messageDiv = $("<div class='msg right'></div>");
-      messageDiv.html(self.text);
+      self.addMsg(self.text, 'right');
+      self.chatSocket.send(JSON.stringify({
+        'from': self.sponsor.name,
+        'message': self.text
+      }));
+      self.text = '';
+    },
+    receiveMsg: function(data){
+      var self = this;
+      console.log('receive ', data.from, self.sponsor.name);
+      if(data.from != self.sponsor.name){
+        self.addMsg(data.message, 'left');
+      }
+    },
+    addMsg: function(content, pos){
+
+      var messageDiv = $("<div class='msg "+pos+"'></div>");
+      messageDiv.html(content);
       var box = $("<div></div>");
       box.append(messageDiv);
       box.append("<div class='clear'></div>");
@@ -367,8 +414,8 @@ const com_review = {
       name:"Sponsor 1",
       charity_count:3,
       charity_fav:"Charity A",
-      keyword:"Education",
-      keyword_count:3
+      sponsor_times:3,
+      user:{}
     }
   },
   created () {
@@ -377,7 +424,20 @@ const com_review = {
   methods:{
     // set annual Review data
     loadData: function(){
-      
+      var self = this;
+      var email = localStorage.getItem('email');
+      self.user = JSON.parse(localStorage.getItem('user'));
+
+      var data = {email:email};
+      axios.post("/review/", data).then(function(resp){
+        let res = resp.data;
+        console.log('review', res);
+        if(res != null){
+          self.charity_count = res.charity_count;
+          self.charity_fav = res.charity_favorite;
+          self.sponsor_times = res.sponsor_times;
+        }
+      });
     },
   },
   template: $('#com_review').html()

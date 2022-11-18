@@ -216,6 +216,16 @@ const com_event_detail = {
         self.fetchData();
       });
 
+    },
+    update: function(){
+      
+      var data = this.event;
+      data.email = localStorage.getItem('email');
+      axios.post("/update_event/", data).then(function(resp){
+        let res = resp.data;
+        console.log('update_event', res);
+        alert(res.message);
+      });
     }
   },
   template: $('#com_event_detail').html()
@@ -267,18 +277,69 @@ const com_chat_with = {
   methods: {
     loadData: function(){
       var self = this;
+      self.charity = JSON.parse(localStorage.getItem('user'));
       var email = this.$route.query.email;
       var data = {email:email};
       axios.post("/show_s/", data).then(function(resp){
         let res = resp.data;
         console.log('show_s', res);
         self.user = res.data;
+        self.sponsor = res.data;
+
+        self.connect();
+
       });
+    },
+    connect:function(){
+      var self = this;
+      var roomName = self.charity.name + '_' + self.sponsor.sponsor_name;
+      var hostname = window.location.host.split(':')[0] + ':5000'
+      var url = 'ws://' + hostname + '/ws/chat/' + roomName + '/';
+      console.log('websoket url', url);
+      const chatSocket = new WebSocket(url);
+      self.chatSocket = chatSocket;
+
+      chatSocket.onmessage = function(e) {
+          const data = JSON.parse(e.data);
+          console.log('msg data', data);
+          // document.querySelector('#chat-log').value += (data.message + '\n');
+          self.receiveMsg(data);
+      };
+
+      chatSocket.onclose = function(e) {
+          console.error('Chat socket closed unexpectedly');
+      };
+
+
+    },
+    inputKeyup:function(e){
+      var self = this;
+      if(e.keyCode === 13){
+        self.sendMsg();
+        // self.receiveMsg({from:'abc', message:self.text});
+      }
     },
     sendMsg: function(){
       var self = this;
-      var messageDiv = $("<div class='msg right'></div>");
-      messageDiv.html(self.text);
+      self.addMsg(self.text, 'right');
+      self.chatSocket.send(JSON.stringify({
+        'from': self.charity.name,
+        'message': self.text
+      }));
+      self.text = '';
+    },
+    receiveMsg: function(data){
+      var self = this;
+      
+      console.log('receive ', data.from, self.sponsor.name);
+      if(data.from != self.charity.name){
+        self.addMsg(data.message, 'left');
+      }
+    },
+    addMsg: function(content, pos){
+
+      var messageDiv = $("<div class='msg "+pos+"'></div>");
+      messageDiv.html(content);
       var box = $("<div></div>");
       box.append(messageDiv);
       box.append("<div class='clear'></div>");

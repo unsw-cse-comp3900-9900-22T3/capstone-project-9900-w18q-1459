@@ -991,6 +991,10 @@ class ReviewView(generics.GenericAPIView):
             return Response({"message": 'No such a sponsor'})
         sponsor = sponsor[0]
         charity = get_charity_count(data['email'])
+        if not charity:
+            charity_count = 0
+            charity_max = 0
+            max_times = 0
         charity_count = len(charity.keys())
         charity_max = max(charity.items(), key=operator.itemgetter(1))[0]
         print(charity_count, charity_max)

@@ -94,7 +94,7 @@
 
   <!-- Home -->
     <div id="com_home">
-      <div class="welcome" id="v-pills-home">
+      <div class="welcom" id="v-pills-home">
         <div class="row">
 
           Dear {{user.name}}:<br>
@@ -196,6 +196,10 @@
         <div class="col-4">
           <input type="text" class="form-control" v-model="event.target_f">
         </div>
+        <div class="col-2">Description</div>
+        <div class="col-4">
+          <textarea type="text" class="form-control" v-model="event.description"></textarea>
+        </div>
       </div>
       <div class="row mb-2">
         <div class="col-2">Charity</div>
@@ -257,7 +261,7 @@
         <div class="row">
 
           <div class="col-8 offset-1">
-            <input type="text" class="form-control" v-model="text">
+            <input type="text" class="form-control" v-model="text" @keyup="inputKeyup">
           </div>
           <button class="btn btn-primary col-2" @click="sendMsg">Send</button>
         </div>
@@ -311,12 +315,13 @@
       <div class="text-center">
         <h1>Annual Review</h1>
       </div>
-      <h3>Dear {{name}}:</h3>
+      <h3>Dear Sponsor {{user.name}}:</h3>
       <div class="review-text">
-        In this year, you have followed <span class="hot">{{charity_count}}</span> charities<br>
-        <span class="hot">{{charity_name}}</span> is your favourite one<br>
-        <span class="hot">{{keyword}}</span> is your favourite keywords<br>
-        You have supported <span class="hot">{{keyword_count}}</span> times for this keywords<br>
+        Since you joined our website<br>
+        You have sponsored  <span class="hot">{{charity_count}}</span> charities<br>
+        One of your favourite charities is <span class="hot">{{charity_fav}}</span> <br>
+        You have donated to this charity <span class="hot">{{sponsor_times}}</span> times in the past.<br>
+        Thank you very much for your generosity and we hope that more people will join us in helping others in the future!<br>
       </div>
     </div>
   </div>
