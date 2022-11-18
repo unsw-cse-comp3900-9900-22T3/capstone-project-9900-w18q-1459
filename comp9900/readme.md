@@ -20,10 +20,19 @@ DATABASES = {
 ```
 ### Model Migrate
 ```commandline
+python3 manage.py makemigrations
+```
+```commandline
 python3 manage.py migrate
 ```
 
 ## Step 3: Run server
+```commandline
+sudo su
+```
+```commandline
+redis-cli
+```
 ```commandline
 python3 manage.py runserver
 ```
